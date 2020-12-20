@@ -9,15 +9,15 @@ plugins {
     id "maven-publish"
 }
 
-def GROUP_ID= 'sidev.data.quran' //'sidev.lib.kotlin.multi'
-def ARTIFACT_ID= 'KtStdLib'
+def GROUP_ID= 'sidev.data' //'sidev.lib.kotlin.multi'
+def ARTIFACT_ID= 'JvmQuranData'
 def BINTRAY_REPOSITORY= 'SidevLib'
 def BINTRAY_ORGINIZATION= ""
 def ISSUE_URL= ""
 def SITE_URL= ""
-def VCS_URL= "https://github.com/alfalifr/SidevLibKt/tree/master/StdLib"
+def VCS_URL= "https://github.com/alfalifr/JvmQuranData"
 def LIBRARY_VERSION_NAMES= ['0.0.1x', '0.0.1x.11112020']
-def LIBRARY_VERSION_NAME= LIBRARY_VERSION_NAMES.last()
+def LIBRARY_VERSION_NAME= '0.0.1x' //LIBRARY_VERSION_NAMES.last()
 
 group GROUP_ID
 version LIBRARY_VERSION_NAME
@@ -48,11 +48,69 @@ Template Task
 ==================
  */
 
+///*
+tasks.register("sourcesJar", Jar) {
+    from sourceSets.main.allJava
+    classifier "sources"
+}
+
+tasks.register("javadocJar", Jar) {
+    from javadoc
+    classifier "javadoc"
+}
+// */
+
+/*
+components.java.withVariantsFromConfiguration(configurations.sourcesElements) {
+    skip()
+}
+ */
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+//            artifact sourcesJar
+            artifact javadocJar
+            pom {
+                name = ARTIFACT_ID
+//                description = "WebDriver binary manager for java"
+                url = ISSUE_URL
+//                licenses = ['Apache-2.0']
+///*
+                licenses {
+                    license {
+                        name = "Apache-2.0" //"MIT"
+//                        url = "https://github.com/rosolko/wdm4j/blob/master/LICENSE"
+                    }
+                }
+//*/
+                developers {
+                    developer {
+                        id = "alfalifr"
+                        name = "Aliffiro" //"Aliaksandr Rasolka"
+                        email = "fathf48@gmail.com"
+                    }
+                }
+/*
+                scm {
+                    connection = "scm:git:https://github.com/rosolko/wdm4j.git"
+                    developerConnection = "scm:git:https://github.com/rosolko/wdm4j.git"
+                    url = "https://github.com/rosolko/wdm4j"
+                }
+*/
+            }
+// */
+        }
+    }
+}
+
+/*
 afterEvaluate {
     project.publishing.publications.all {
         // rename artifacts
         groupId = GROUP_ID
-        artifactId = "$ARTIFACT_ID"
+        artifactId = ARTIFACT_ID
 /*
         if (it.name.contains('metadata')) {
             artifactId = "$ARTIFACT_ID"
@@ -60,16 +118,6 @@ afterEvaluate {
             artifactId = "$ARTIFACT_ID-$name"
         }
  */
-
-        pom {
-            developers {
-                developer {
-                    id = "alfalifr"
-                    name = "Aliffiro" //"Aliaksandr Rasolka"
-                    email = "fathf48@gmail.com"
-                }
-            }
-        }
 /*
         for(arti in it.artifacts){
             if(arti.class.name == "org.gradle.api.publish.maven.internal.artifact.PublishArtifactBasedMavenArtifact_Decorated"
@@ -87,9 +135,10 @@ afterEvaluate {
                 }
             }
         }
- */
+ * /
     }
 }
+*/
 
 def getBintrayUserProperty() {
     return hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
@@ -109,6 +158,7 @@ bintray {
     //f you set publish to true, the new version will be published the moment you upload to bintray. If false, it will not be published unless you press the publish button on the bintray web.
     // It is recommended that you make it false because it can prevent an accident that you accidentally release the latest version.
     publish = false
+    publications= ["mavenJava"]
 
     pkg {
         repo = BINTRAY_REPOSITORY
@@ -135,6 +185,7 @@ bintray {
 /*
 bintrayUpload.doFirst {
     publications = publishing.publications.collect {
+        println "Test .... ${it.name}"
         it.name
     }.findAll {
         it != "kotlinMultiplatform"
@@ -162,13 +213,18 @@ bintrayUpload.doFirst {
  * /
 }
 */
+
 ///*
 task modifySource{
     doFirst {
+        println "project.publishing= ${project.publishing}"
+        println "project.publishing.publications= ${project.publishing.publications}"
         project.publishing.publications.all {
             for(arti in it.artifacts){
-                if(arti.class.name == "org.gradle.api.publish.maven.internal.artifact.PublishArtifactBasedMavenArtifact_Decorated"
-                        && arti.classifier == "sources"){
+                println "arti = $arti"
+                println "arti.props = ${arti.properties}"
+                if(//arti.class.name == "org.gradle.api.publish.maven.internal.artifact.PublishArtifactBasedMavenArtifact_Decorated"
+                arti.classifier == "sources"){
                     def file= (File) arti.file
                     println "artifact $arti file is about to be changed: file in ${file.path}"
                     try{

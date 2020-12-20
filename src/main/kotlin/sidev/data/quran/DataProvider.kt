@@ -1,14 +1,21 @@
 package sidev.data.quran
 
-import sidev.data.quran.src.Source
+import sidev.lib.collection.ReadOnlyList
+import sidev.lib.collection.asReadOnly
 import sidev.lib.console.prine
 import sidev.lib.exception.IllegalArgExc
-import sidev.lib.property.mutableLazy
-import java.io.File
 import java.util.*
 
+/**
+ * Interface umum bagi objek yang menyediakan record dari file.
+ */
 interface DataProvider {
-    val headerList: List<String>
+    val headerList: ReadOnlyList<String>
+
+    /**
+     * Range index yang berisi record, tidak termasuk header.
+     */
+    val recordRange: IntRange
 
 //    fun cacheToList()
     fun clearCache()
@@ -20,7 +27,7 @@ interface DataProvider {
         val row= this[rowIndex]
         return row[index]
     }
-    operator fun get(index: Int): List<String>
+    operator fun get(index: Int): ReadOnlyList<String>
 }
 
 internal abstract class DataProviderImpl: DataProvider {
@@ -30,8 +37,8 @@ internal abstract class DataProviderImpl: DataProvider {
 
     private lateinit var scanner: Scanner
     private var currPointer= 0
-    private var list: List<List<String>>?= null
-    override val headerList: List<String> by lazy { headerStr.split(";").map { it.replace("\"", "") } }
+    private var list: List<ReadOnlyList<String>>?= null
+    override val headerList: ReadOnlyList<String> by lazy { headerStr.split(";").map { it.replace("\"", "") }.asReadOnly(false) }
 /*
     override fun cacheToList(){
         if(list != null) return
@@ -40,11 +47,11 @@ internal abstract class DataProviderImpl: DataProvider {
  */
     private fun initScanner() {
         val fileName= if(fileName.endsWith(".csv")) fileName else "$fileName.csv"
-        val file= Source[fileName] //File("_src/$fileName")
-        prine(file.absolutePath)
-        prine(file.exists())
+        val stream= Source[fileName] //File("_src/$fileName")
+//        prine(file.absolutePath)
+//        prine(file.exists())
 //        val file= File(File("src/$fileName").absolutePath)
-        scanner= Scanner(file, Charsets.UTF_8)
+        scanner= Scanner(stream, Charsets.UTF_8)
     }
     private fun initCache(){
         if(list != null) return
@@ -56,8 +63,13 @@ internal abstract class DataProviderImpl: DataProvider {
         list= null
     }
 
-    private fun splitLineToColumn(line: String): List<String> =
-        line.split(";").map { it.replace("\"", "") }
+    private fun splitLineToColumn(line: String): ReadOnlyList<String> =
+        line.split(";").map { it.replace("\"", "") }.asReadOnly(false)
+
+    fun checkRecordRange(index: Int) {
+        if(index !in recordRange)
+            throw IllegalArgExc(paramExcepted = arrayOf("index"), detailMsg = "Param `index` ($index) tidak berada di antara nilai $recordRange")
+    }
 
     override operator fun get(header: String, rowIndex: Int): String {
         val index= headerList.indexOf(header.toLowerCase())
@@ -66,7 +78,7 @@ internal abstract class DataProviderImpl: DataProvider {
         val row= this[rowIndex]
         return row[index]
     }
-    override operator fun get(index: Int): List<String> {
+    override operator fun get(index: Int): ReadOnlyList<String> {
         initCache()
         val mutList= list as MutableList
         prine("currPointer <= index => ${currPointer <= index} scanner.hasNextLine() => ${scanner.hasNextLine()} scanner.hasNext() => ${scanner.hasNext()}")
