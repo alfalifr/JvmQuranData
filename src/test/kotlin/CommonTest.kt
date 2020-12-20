@@ -40,6 +40,7 @@ class CommonTest {
         prin(Juz[3])
         prin(Juz[30])
         prin("Juz.suratRange(30)= ${Juz.suratRange(30)}")
+        prin("Juz.ayatRangeList(30)= ${Juz.ayatRangeList(30)}")
 //        prin("Juz.suratRange(300)= ${Juz.suratRange(300)}")
     }
 }
