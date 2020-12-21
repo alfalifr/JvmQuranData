@@ -7,9 +7,9 @@ object Page: DataProvider by PageImpl {
         val suratRangeList= suratStr.split("-")
         return suratRangeList[0].toInt() .. suratRangeList[1].toInt()
     }
-    fun ayatRangeList(page: Int): List<IntRange> {
+    fun ayatInSuratRangeList(page: Int): List<IntRange> {
         PageImpl.checkRecordRange(page)
-        val ayatStr= this["ayat", page]
+        val ayatStr= this["ayat_surat", page]
         val ayatRangeList= ayatStr.split(",")
 
         val res= mutableListOf<IntRange>()
@@ -20,10 +20,16 @@ object Page: DataProvider by PageImpl {
         }
         return res
     }
+    fun ayatRangeList(page: Int): IntRange {
+        PageImpl.checkRecordRange(page)
+        val ayatStr= this["ayat", page]
+        val ayatRangeList= ayatStr.split("-")
+        return ayatRangeList[0].toInt() .. ayatRangeList[1].toInt()
+    }
 }
 
 internal object PageImpl: DataProviderImpl() {
-    override val headerStr: String = """"no";"surat";"ayat""""
+    override val headerStr: String = """"no";"surat";"ayat";"ayat_surat""""
     override val fileName: String = "page_ustmani.csv"
     override val recordRange: IntRange = 1 .. QuranConst.PAGE_USTMANI_MAX
 }

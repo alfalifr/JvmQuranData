@@ -9,7 +9,7 @@ import java.util.*
 /**
  * Interface umum bagi objek yang menyediakan record dari file.
  */
-interface DataProvider {
+interface DataProvider: Iterable<List<String>> {
     val headerList: ReadOnlyList<String>
 
     /**
@@ -89,5 +89,24 @@ internal abstract class DataProviderImpl: DataProvider {
         if(currPointer <= index)
             throw IllegalArgExc(paramExcepted = arrayOf("index"), detailMsg = "Param `index` ($index) melebihi panjang data ($currPointer)")
         return mutList[index]
+    }
+
+    override fun iterator(): Iterator<List<String>> = object: Iterator<List<String>> {
+        val mutList: MutableList<ReadOnlyList<String>> by lazy {
+            initCache()
+            list as MutableList
+        }
+        var i= 0
+
+        override fun hasNext(): Boolean = i < mutList.size || scanner.hasNextLine()
+        override fun next(): List<String> {
+            val next= if(i < mutList.size) mutList[i]
+            else splitLineToColumn(scanner.nextLine()).also {
+                mutList += it
+                currPointer++
+            }
+            i++
+            return next
+        }
     }
 }

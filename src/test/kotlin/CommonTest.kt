@@ -1,8 +1,5 @@
 import org.junit.Test
-import sidev.data.quran.Ayat
-import sidev.data.quran.Juz
-import sidev.data.quran.Page
-import sidev.data.quran.Surat
+import sidev.data.quran.*
 import sidev.lib.console.prin
 import sidev.lib.text.Charset
 
@@ -41,6 +38,16 @@ class CommonTest {
         prin(Juz[30])
         prin("Juz.suratRange(30)= ${Juz.suratRange(30)}")
         prin("Juz.ayatRangeList(30)= ${Juz.ayatRangeList(30)}")
+        prin("Juz.ayatInSuratRangeList(30)= ${Juz.ayatInSuratRangeList(30)}")
 //        prin("Juz.suratRange(300)= ${Juz.suratRange(300)}")
+    }
+
+    @Test
+    fun juzProcessTest(){
+        processJuz()
+    }
+    @Test
+    fun pageProcessTest(){
+        processPage()
     }
 }
