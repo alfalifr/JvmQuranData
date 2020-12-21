@@ -7,7 +7,7 @@ object Page: DataProvider by PageImpl {
         val suratRangeList= suratStr.split("-")
         return suratRangeList[0].toInt() .. suratRangeList[1].toInt()
     }
-    fun ayatInSuratRangeList(page: Int): List<IntRange> {
+    fun ayatInSuratRange(page: Int): List<IntRange> {
         PageImpl.checkRecordRange(page)
         val ayatStr= this["ayat_surat", page]
         val ayatRangeList= ayatStr.split(",")
@@ -20,7 +20,7 @@ object Page: DataProvider by PageImpl {
         }
         return res
     }
-    fun ayatRangeList(page: Int): IntRange {
+    fun ayatRange(page: Int): IntRange {
         PageImpl.checkRecordRange(page)
         val ayatStr= this["ayat", page]
         val ayatRangeList= ayatStr.split("-")

@@ -7,7 +7,7 @@ object Juz: DataProvider by JuzImpl {
         val suratRangeList= suratStr.split("-")
         return suratRangeList[0].toInt() .. suratRangeList[1].toInt()
     }
-    fun ayatInSuratRangeList(juz: Int): List<IntRange> {
+    fun ayatInSuratRange(juz: Int): List<IntRange> {
         JuzImpl.checkRecordRange(juz)
         val ayatStr= this["ayat_surat", juz]
         val ayatRangeList= ayatStr.split(",")
@@ -20,7 +20,7 @@ object Juz: DataProvider by JuzImpl {
         }
         return res
     }
-    fun ayatRangeList(juz: Int): IntRange {
+    fun ayatRange(juz: Int): IntRange {
         JuzImpl.checkRecordRange(juz)
         val ayatStr= this["ayat", juz]
         val ayatRangeList= ayatStr.split("-")

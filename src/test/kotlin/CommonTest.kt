@@ -31,14 +31,14 @@ class CommonTest {
         prin(Page[3])
         prin(Page[604])
         prin("Page.suratRange(604)= ${Page.suratRange(604)}")
-        prin("Page.ayatRangeList(604)= ${Page.ayatRangeList(604)}")
+        prin("Page.ayatRange(604)= ${Page.ayatRange(604)}")
 
         prin("\n\n ======== Juz ========= \n\n")
         prin(Juz[3])
         prin(Juz[30])
         prin("Juz.suratRange(30)= ${Juz.suratRange(30)}")
-        prin("Juz.ayatRangeList(30)= ${Juz.ayatRangeList(30)}")
-        prin("Juz.ayatInSuratRangeList(30)= ${Juz.ayatInSuratRangeList(30)}")
+        prin("Juz.ayatRange(30)= ${Juz.ayatRange(30)}")
+        prin("Juz.ayatInSuratRange(30)= ${Juz.ayatInSuratRange(30)}")
 //        prin("Juz.suratRange(300)= ${Juz.suratRange(300)}")
     }
 
