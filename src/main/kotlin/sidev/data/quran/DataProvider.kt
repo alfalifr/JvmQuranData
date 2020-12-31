@@ -1,5 +1,8 @@
 package sidev.data.quran
-
+/*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import sidev.lib.collection.ReadOnlyList
 import sidev.lib.collection.asReadOnly
 import sidev.lib.console.prine
@@ -28,6 +31,15 @@ interface DataProvider: Iterable<List<String>> {
         return row[index]
     }
     operator fun get(index: Int): ReadOnlyList<String>
+
+    fun getAsync(header: String, rowIndex: Int, callback: (String) -> Unit): Job = GlobalScope.launch {
+        val str= get(header, rowIndex)
+        callback(str)
+    }
+    fun getAsync(index: Int, callback: (ReadOnlyList<String>) -> Unit): Job = GlobalScope.launch {
+        val str= get(index)
+        callback(str)
+    }
 }
 
 internal abstract class DataProviderImpl: DataProvider {
@@ -51,7 +63,7 @@ internal abstract class DataProviderImpl: DataProvider {
 //        prine(file.absolutePath)
 //        prine(file.exists())
 //        val file= File(File("src/$fileName").absolutePath)
-        scanner= Scanner(stream, Charsets.UTF_8)
+        scanner= Scanner(stream, Charsets.UTF_8.name())
     }
     private fun initCache(){
         if(list != null) return
@@ -110,3 +122,4 @@ internal abstract class DataProviderImpl: DataProvider {
         }
     }
 }
+ */

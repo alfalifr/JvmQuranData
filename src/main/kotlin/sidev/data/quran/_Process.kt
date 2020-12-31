@@ -3,6 +3,9 @@ package sidev.data.quran
 import sidev.lib.console.prin
 import sidev.lib.jvm.tool.util.FileUtil
 import sidev.lib.jvm.tool.util.TimeUtil
+import sidev.lib.text.Charset
+import sidev.lib.text.removeSurroundingWhitespace
+import sidev.lib.text.removeWhitespace
 import java.io.File
 
 internal fun processJuz(){
@@ -69,6 +72,29 @@ internal fun processPage(){
         row += ";\"${ e.last() }\""
 
         prin("newLine= $row")
+        FileUtil.saveln(file, row, charset = Charsets.UTF_8)
+    }
+}
+
+internal fun processAyat(){
+    val timestamp= TimeUtil.timestamp(pattern = "dd-MM-yyyy_HH-mm-ss")
+    val file= File("_output/ayat/ayat_$timestamp.csv")
+    val header= "\"no\";\"surat\";\"ayat\";\"lafadz\";\"arti\""
+
+    FileUtil.saveln(file, header, charset = Charsets.UTF_8)
+
+    for((i, e) in Ayat.withIndex()){
+        if(i == 0) continue
+        val no= e[0]
+        val surat= e[1]
+        val ayat= e[2].removeSurroundingWhitespace() //.removePrefix(" ").removeSuffix(" ")
+        val lafadz= e[3]
+        val arti= e[4]
+
+        val row= "\"$no\";\"$surat\";\"$ayat\";\"$lafadz\";\"$arti\""
+//        "".removeWhitespace()
+//        ".".removeSurroundingWhitespace()
+        prin("newLine= $row", Charset.UTF_8)
         FileUtil.saveln(file, row, charset = Charsets.UTF_8)
     }
 }
