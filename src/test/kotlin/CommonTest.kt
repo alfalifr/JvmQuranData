@@ -94,13 +94,13 @@ class CommonTest {
         val m= Quran.getAyatEndMark(553, false)
         prin(m, Charset.UTF_8)
 
-        FileUtil.saveln(File("_output/tes.txt"), m, charset = Charsets.UTF_8)
+        FileUtil.saveln(File("_output/tes.txt"), m, charset = Charsets.UTF_8, inSameFile = false)
 
-        val ayat1= Ayat.lafadz(5, false)
-        val ayat2= Ayat.lafadz(2)
+        val ayat1= Ayat.lafadz(5, false, false, true)
+        val ayat2= Ayat.lafadz(2, reverseMark = true)
 
         val end1= Quran.getAyatEndMark(1)
-        val end2= Quran.getAyatEndMark(2)
+        val end2= Quran.getAyatEndMark(2, reverseMark = true)
 
         val laf= "$ayat1 $end1 $ayat2 $end2"
         prin(laf)
@@ -126,5 +126,10 @@ class CommonTest {
     fun intTest(){
         val c1= '1'
         prin(c1.toInt())
+    }
+
+    @Test
+    fun lafadzTest(){
+        prin(Ayat.lafadz(1, false, false), Charset.UTF_8)
     }
 }

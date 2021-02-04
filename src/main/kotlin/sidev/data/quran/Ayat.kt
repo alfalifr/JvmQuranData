@@ -13,9 +13,14 @@ object Ayat: DataProvider by dataProvider(
     fun surat(ayat: Int): Int = this["surat", ayat].toInt()
     fun ayatInSurat(ayat: Int): Int = this["ayat", ayat].toInt()
     @JvmOverloads
-    fun lafadz(ayat: Int, withoutAyatEndMark: Boolean= true, useSingleEndMark: Boolean = true): String {
+    fun lafadz(
+        ayat: Int,
+        withoutAyatEndMark: Boolean= true,
+        useSingleEndMark: Boolean = true,
+        reverseMark: Boolean = false
+    ): String {
         val lafadz= this["lafadz", ayat]
-        val endMark= if(withoutAyatEndMark) "" else " " +Quran.getAyatEndMark(ayatInSurat(ayat), useSingleEndMark)
+        val endMark= if(withoutAyatEndMark) "" else " " +Quran.getAyatEndMark(ayatInSurat(ayat), useSingleEndMark, reverseMark)
         return "$lafadz$endMark"
     }
     fun meaning(ayat: Int): String = this["arti", ayat]

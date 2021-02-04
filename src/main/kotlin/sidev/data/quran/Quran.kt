@@ -50,11 +50,16 @@ object Quran {
      * Mengambil string yang merupakan tanda akhir dari ayat dengan nomor [ayatNo].
      */
     @JvmOverloads
-    fun getAyatEndMark(ayatNo: Int, useSingleEndMark: Boolean = true): String {
+    fun getAyatEndMark(ayatNo: Int, useSingleEndMark: Boolean = true, reverseMark: Boolean = false): String {
 //        return ORNATE_LEFT_PARENTHESIS_STR + ayatAr + ORNATE_RIGHT_PARENTHESIS_STR
         val ayatAr= toArabInt(ayatNo)
-        return if(useSingleEndMark) AYAT_END_MARK_STR + ayatAr
-        else ORNATE_LEFT_PARENTHESIS_STR + ayatAr + ORNATE_RIGHT_PARENTHESIS_STR
+        return if(!reverseMark){
+            if(useSingleEndMark) AYAT_END_MARK_STR + ayatAr
+            else ORNATE_LEFT_PARENTHESIS_STR + ayatAr + ORNATE_RIGHT_PARENTHESIS_STR
+        } else {
+            if(useSingleEndMark) ayatAr + AYAT_END_MARK_STR
+            else ORNATE_RIGHT_PARENTHESIS_STR + ayatAr + ORNATE_LEFT_PARENTHESIS_STR
+        }
     }
 
     /**
